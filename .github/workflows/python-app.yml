@@ -12,8 +12,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - python_version: '3.7'
-            django_version: '3.2'
           - python_version: '3.8'
             django_version: '3.2'
           - python_version: '3.9'
