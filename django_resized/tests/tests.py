@@ -2,7 +2,7 @@
 import os
 import shutil
 from io import BytesIO
-from PIL import Image, ImageSequence
+from PIL import Image, ImageFile, ImageSequence
 
 from django.conf import settings
 from django.core import checks
@@ -139,6 +139,14 @@ class ResizeTest(TestCase):
         im2 = Image.open(product.image2.path)
         self.assertEqual(im2.size, (50, 50))
         self.assertEqual(im2.format, 'PNG')
+
+    def test_maxblock_restored(self):
+        maxblock = ImageFile.MAXBLOCK
+        Product.objects.create(
+            image7=File(open('media/big.jpg', 'rb')),
+            image2=self.animated_gif(loop=0),
+        )
+        self.assertEqual(ImageFile.MAXBLOCK, maxblock)
 
     def animated_gif(self, **save_kwargs):
         frames = [Image.new('RGB', (800, 600), color) for color in ('red', 'green', 'blue')]
